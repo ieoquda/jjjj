@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DARK CASINO | Minesgems Access</title>
+    
+    <!-- Importing Horror and Typewriter Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Creepster&family=Special+Elite&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-color: #050505;
+            --card-bg: #0a0a0a;
+            --text-color: #c0c0c0;
+            --accent-red: #8b0000;
+            --accent-gold: #b8860b;
+            --scare-blue: #0000ff; /* The requested blue for the scare */
+            --font-horror: 'Creepster', cursive;
+            --font-type: 'Special Elite', monospace;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: var(--font-type);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Background Ambient Effects */
+        .fog {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, transparent 20%, #000 90%),
+                        url('data:image/svg+xml;utf8,%3Csvg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noiseFilter"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23noiseFilter)" opacity="0.1"/%3E%3C/svg%3E');
+            opacity: 0.4;
+            z-index: 0;
+            pointer-events: none;
+            animation: pulse-bg 4s infinite alternate;
+        }
+
+        /* The Main Container */
+        .login-container {
+            position: relative;
+            width: 100%;
+            max-width: 420px;
+            padding: 40px;
+            background: var(--card-bg);
+            border: 1px solid #333;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
+            z-index: 10;
+            transform-style: preserve-3d;
+            transition: all 0.3s ease;
+        }
+
+        /* Decorative "Minesgems" Graphic above form */
+        .gem-icon {
+            text-align: center;
+            font-size: 3rem;
+            color: var(--accent-gold);
+            margin-bottom: 10px;
+            filter: drop-shadow(0 0 5px rgba(184, 134, 11, 0.5));
+            animation: float 3s ease-in-out infinite;
+        }
+
+        h1 {
+            font-family: var(--font-horror);
+            text-align: center;
+            font-size: 3.5rem;
+            color: var(--accent-red);
+            margin-bottom: 30px;
+            letter-spacing: 2px;
+            text-shadow: 2px 2px 0px #000;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+            color: #666;
+            letter-spacing: 1px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid #333;
+            color: #fff;
+            font-family: var(--font-type);
+            font-size: 1.1rem;
+            outline: none;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        input:focus {
+            border-bottom-color: var(--accent-red);
+            box-shadow: 0 4px 4px -4px var(--accent-red);
+        }
+
+        /* Buttons */
+        .btn-horror {
+            width: 100%;
+            padding: 15px;
+            background: transparent;
+            border: 1px solid var(--accent-red);
+            color: var(--accent-red);
+            font-family: var(--font-horror);
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            margin-top: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-horror:hover {
+            background: var(--accent-red);
+            color: #000;
+            box-shadow: 0 0 15px var(--accent-red);
+        }
+
+        /* Sections Logic */
+        .section {
+            display: none; /* Hidden by default */
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        /* Error Message Styles */
+        .error-msg {
+            margin-top: 20px;
+            text-align: center;
+            color: var(--accent-red);
+            font-family: var(--font-horror);
+            font-size: 1.2rem;
+            min-height: 30px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        /* The specific "Death is near" message styling */
+        .death-message {
+            color: #ff0000 !important;
+            text-shadow: 0 0 10px #ff0000;
+            animation: smooth-slow-fear 3s forwards;
+            display: block;
+            font-size: 1.8rem;
+        }
+
+        /* The Blue Scare Effect Class */
+        .blue-scare-active {
+            animation: blue-flash 0.2s ease-out 3; /* Flash 3 times */
+        }
+
+        /* Casino List Styles */
+        .casino-list-container {
+            margin-top: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .casino-item {
+            font-family: var(--font-horror);
+            font-size: 2rem;
+            color: var(--accent-gold);
+            border: 1px solid #333;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .casino-item:hover {
+            background: var(--accent-gold);
+            color: #000;
+            box-shadow: 0 0 20px var(--accent-gold);
+            transform: scale(1.02);
+        }
+
+        /* Animations */
+        @keyframes pulse-bg {
+            0% { opacity: 0.3; }
+            100% { opacity: 0.5; }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes smooth-slow-fear {
+            0% {
+                opacity: 0;
+                transform: scale(0.9);
+                letter-spacing: normal;
+                filter: blur(0px);
+            }
+            30% {
+                opacity: 1;
+                transform: scale(1.05);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+                letter-spacing: 5px;
+                filter: blur(1px);
+            }
+        }
+
+        @keyframes blue-flash {
+            0%, 100% { background-color: var(--bg-color); }
+            50% { background-color: var(--scare-blue); box-shadow: inset 0 0 50px var(--scare-blue); }
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="fog"></div>
+
+    <div class="login-container" id="main-card">
+        
+        <!-- SECTION 1: LOGIN -->
+        <div id="login-section" class="section active">
+            <div class="gem-icon">💎</div>
+            <h1>DARK CASINO</h1>
+            <form id="login-form">
+                <div class="form-group">
+                    <label for="username">CODENAME</label>
+                    <input type="text" id="username" autocomplete="off" placeholder="Enter your ID...">
+                </div>
+                <div class="form-group">
+                    <label for="password">ACCESS CODE</label>
+                    <input type="password" id="password" placeholder="••••••••••••">
+                </div>
+                <button type="submit" class="btn-horror">Enter Void</button>
+            </form>
+            <div id="login-error" class="error-msg"></div>
+        </div>
+
+        <!-- SECTION 2: SECRET KEY -->
+        <div id="secret-section" class="section">
+            <div class="gem-icon">💀</div>
+            <h1>FINAL CHECK</h1>
+            <p style="text-align: center; margin-bottom: 20px; color: #666;">Identity Verified. Enter World Key.</p>
+            <form id="secret-form">
+                <div class="form-group">
+                    <label for="secret-key">SECRET KEY</label>
+                    <input type="password" id="secret-key" autocomplete="off" placeholder="The last key...">
+                </div>
+                <button type="submit" class="btn-horror">Unlock Gate</button>
+            </form>
+            <div id="secret-error" class="error-msg"></div>
+        </div>
+
+        <!-- SECTION 3: ACCESS GRANTED & CASINO LIST -->
+        <div id="access-section" class="section">
+            <div style="text-align: center;">
+                <div class="gem-icon">👁️</div>
+                <h2 style="font-family: var(--font-horror); color: var(--accent-gold); margin-bottom: 20px;">SYSTEM UNLOCKED</h2>
+                
+                <div class="casino-list-container">
+                    <div class="casino-item">1xbet</div>
+                    <div class="casino-item">melbet</div>
+                    <div class="casino-item">betx</div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // User Database as requested
+        const users = [
+            { u: "skyfox92", p: "Xf9@Q2mL" },
+            { u: "neon_river", p: "R7!kP3zA" },
+            { u: "bytehawk", p: "H4$Lm8Qe" },
+            { u: "lunar_echo", p: "E9@WqT2s" },
+            { u: "codevibe_x", p: "Vp3#M7KZ" },
+            { u: "nightpixel", p: "N8!Sx4JQ" },
+            { u: "zen_matrix", p: "Z2@kR9mL" },
+            { u: "turbo_wave", p: "W5$P8QeX" },
+            { u: "frostbyte_7", p: "F7#L9@Kx" },
+            { u: "alpha_nova", p: "A3!QW8mZ" }
+        ];
+
+        // DOM Elements
+        const loginSection = document.getElementById('login-section');
+        const secretSection = document.getElementById('secret-section');
+        const accessSection = document.getElementById('access-section');
+        const mainCard = document.getElementById('main-card');
+
+        // Login Logic
+        document.getElementById('login-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const userIn = document.getElementById('username').value.trim();
+            const passIn = document.getElementById('password').value.trim();
+            const errorDiv = document.getElementById('login-error');
+
+            const validUser = users.find(u => u.u === userIn && u.p === passIn);
+
+            if (validUser) {
+                // Switch to Secret Key Screen
+                switchSection(loginSection, secretSection);
+                errorDiv.textContent = "";
+            } else {
+                // Normal Login Error (Not the death animation yet)
+                errorDiv.textContent = "ACCESS DENIED: Invalid Credentials";
+                errorDiv.style.opacity = "1";
+                shakeCard();
+            }
+        });
+
+        // Secret Key Logic
+        document.getElementById('secret-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const keyIn = document.getElementById('secret-key').value.trim();
+            const errorDiv = document.getElementById('secret-error');
+
+            // Updated Secret Key
+            const CORRECT_KEY = "Z9@Qm7!LxP#2"; 
+
+            if (keyIn === CORRECT_KEY) {
+                // Correct Key -> Show Casino List
+                switchSection(secretSection, accessSection);
+            } else {
+                // Incorrect Key -> Trigger Horror Scenario
+                // 1. Trigger Blue Scare Effect
+                mainCard.classList.add('blue-scare-active');
+                
+                // 2. Show the specific message with animation
+                errorDiv.innerHTML = "";
+                const msgSpan = document.createElement('span');
+                msgSpan.className = 'death-message';
+                msgSpan.innerText = "death is near incorrect 💀";
+                errorDiv.appendChild(msgSpan);
+
+                // Remove blue flash class after animation so it can run again
+                setTimeout(() => {
+                    mainCard.classList.remove('blue-scare-active');
+                }, 1000);
+            }
+        });
+
+        // Helper: Switch Sections
+        function switchSection(hideEl, showEl) {
+            hideEl.classList.remove('active');
+            // Small delay for visual smoothness
+            setTimeout(() => {
+                hideEl.style.display = 'none';
+                showEl.style.display = 'block';
+                // Trigger reflow
+                void showEl.offsetWidth; 
+                showEl.classList.add('active');
+            }, 300);
+        }
+
+        // Helper: Shake effect for generic errors
+        function shakeCard() {
+            mainCard.animate([
+                { transform: 'translate(0, 0)' },
+                { transform: 'translate(-10px, 0)' },
+                { transform: 'translate(10px, 0)' },
+                { transform: 'translate(-10px, 0)' },
+                { transform: 'translate(10px, 0)' },
+                { transform: 'translate(0, 0)' }
+            ], {
+                duration: 400
+            });
+        }
+
+    </script>
+</body>
+</html>
